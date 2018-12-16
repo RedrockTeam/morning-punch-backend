@@ -1,0 +1,10 @@
+{
+  "execMap": {
+    "ts": "ts-node"
+  },
+  "ignore": [
+    "node_modules",
+    ".vscode",
+    "*.config.js"
+  ]
+}
