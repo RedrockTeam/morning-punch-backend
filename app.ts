@@ -1,5 +1,4 @@
 import * as Koa from 'koa'
-import * as koajwt from 'koa-jwt'
 import * as logger from 'koa-logger'
 import * as bodyParser from 'koa-bodyparser'
 

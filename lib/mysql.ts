@@ -40,14 +40,13 @@ export const setOne = async (user: {
   punch_time: number
   score?: number
 }): Promise<Boolean> => {
-  const { openid, punch_time, score = 45 } = user
-  let prevData = await sqlQuery(`SELECT * FROM user_set WHERE openid='${openid}'`)
-  // 处理以前有过该用户的情况
-  if (prevData.length >= 1) return false
-  else {
+  try {
+    const { openid, punch_time, score = 45 } = user
     await sqlQuery(`insert into user_set 
       ( openid, punch_time, score) values ( '${openid}', '${punch_time}', '${score}')`)
     return true
+  } catch (err) {
+    return false
   }
 }
 
