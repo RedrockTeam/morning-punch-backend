@@ -4,6 +4,7 @@ import * as logger from 'koa-logger'
 import * as bodyParser from 'koa-bodyparser'
 
 import preset from './middleware/preset'
+import afterset from './middleware/afterset'
 
 import router from './routes/index'
 
@@ -12,8 +13,7 @@ const app = new Koa()
 app.use(logger())
 app.use(bodyParser())
 
-app.use(preset)
-
+app.use(preset())
 app.use(async (ctx, next) => {
   return next().catch(err => {
     if (err.status === 401) {
@@ -28,10 +28,7 @@ app.use(koajwt({ secret: 'my_token' }).unless({ path: [/\/login/] }))
 app.use(router.routes())
 app.use(router.allowedMethods())
 
-app.use(ctx => {
-  ctx.status = 404
-  ctx.body = { msg: 'not found' }
-})
+app.use(afterset())
 
 app.listen(8080, () => {
   console.log(`Server is running at http://localhost:8080`)

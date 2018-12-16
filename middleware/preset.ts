@@ -1,8 +1,9 @@
 import { Middleware } from 'koa'
 
 const preset: Middleware = async (ctx, next) => {
-  ctx.body = {}
+  // 先给 ctx.body 传值
+  ctx.body = ctx.body || {}
   await next()
 }
 
-export default preset
+export default () => preset
