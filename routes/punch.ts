@@ -5,7 +5,8 @@ import { getOne, setOne } from '../lib/mysql'
 import { RouterFormat } from './index'
 
 router.get('/', async ctx => {
-  const { openid, punch_time } = <{ [key: string]: any }>ctx.request.body
+  const { openid } = <{ [key: string]: any }>ctx.request.body
+  if (!openid) return
   let userData = <{ [key: string]: any }>await getOne(openid)
   if (!userData) {
     ctx.body.status = 0
@@ -13,7 +14,6 @@ router.get('/', async ctx => {
   } else {
     const { openid, punch_time, score } = userData
   }
-  ctx.status = 200
 })
 
 const routes: RouterFormat = {

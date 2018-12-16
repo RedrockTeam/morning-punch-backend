@@ -5,7 +5,7 @@ import { getOne, setOne } from '../lib/mysql'
 import { defaultScore } from '../config'
 import { RouterFormat } from './index'
 
-router.get('/', async ctx => {
+router.post('/', async ctx => {
   const { openid, punch_time } = <{ [key: string]: any }>ctx.request.body
   if (await getOne(openid)) {
     ctx.body.status = 0
@@ -13,9 +13,9 @@ router.get('/', async ctx => {
   } else {
     await setOne({ openid, punch_time, score: defaultScore[punch_time] })
     ctx.body.status = 1
+    console.log('1412')
     ctx.body.info = await getOne(openid)
   }
-  ctx.status = 200
 })
 
 const routes: RouterFormat = {

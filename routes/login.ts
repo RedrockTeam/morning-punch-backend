@@ -16,7 +16,6 @@ router.post('/', async ctx => {
     ctx.body.isNewUser = true
   }
   ctx.body.jwt = jwt.sign({ name: openid }, 'my_token', { expiresIn: '2h' })
-  ctx.status = 200
 })
 
 const routes: RouterFormat = {

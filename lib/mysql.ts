@@ -41,12 +41,12 @@ export const setOne = async (user: {
   score?: number
 }): Promise<Boolean> => {
   const { openid, punch_time, score = 45 } = user
-  let prevData = await sqlQuery(`SELECT * FROM user_set WHERE openid='${openid}';`)
+  let prevData = await sqlQuery(`SELECT * FROM user_set WHERE openid='${openid}'`)
   // 处理以前有过该用户的情况
   if (prevData.length >= 1) return false
   else {
     await sqlQuery(`insert into user_set 
-      ( openid, punch_time) values ( '${openid}', '${punch_time}, '${score}');`)
+      ( openid, punch_time, score) values ( '${openid}', '${punch_time}', '${score}')`)
     return true
   }
 }
@@ -56,5 +56,5 @@ export const getOne = async (openid: string): Promise<{ [key: string]: any } | B
 
   if (queryRes.length === 1) return queryRes[0]
 
-  return {}
+  return false
 }
