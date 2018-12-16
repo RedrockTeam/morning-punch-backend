@@ -3,6 +3,8 @@ import * as koajwt from 'koa-jwt'
 import * as logger from 'koa-logger'
 import * as bodyParser from 'koa-bodyparser'
 
+import preset from './middleware/preset'
+
 import router from './routes/index'
 
 const app = new Koa()
@@ -10,10 +12,7 @@ const app = new Koa()
 app.use(logger())
 app.use(bodyParser())
 
-app.use(async (ctx, next) => {
-  ctx.body = ctx.body || {}
-  await next()
-})
+app.use(preset)
 
 app.use(async (ctx, next) => {
   return next().catch(err => {
