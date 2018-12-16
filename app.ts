@@ -11,7 +11,7 @@ app.use(logger())
 app.use(bodyParser())
 
 app.use(async (ctx, next) => {
-  ctx.body = {}
+  ctx.body = ctx.body || {}
   await next()
 })
 
@@ -19,32 +19,19 @@ app.use(async (ctx, next) => {
   return next().catch(err => {
     if (err.status === 401) {
       ctx.status = 401
-      ctx.body = {
-        status: 0,
-        message: 'JWT鉴权失败'
-      }
-    } else {
-      throw err
-    }
+      ctx.body = { status: 0, message: 'JWT鉴权失败' }
+    } else throw err
   })
 })
 
-app.use(
-  koajwt({
-    secret: 'my_token'
-  }).unless({
-    path: [/\/login/]
-  })
-)
+app.use(koajwt({ secret: 'my_token' }).unless({ path: [/\/login/] }))
 
 app.use(router.routes())
 app.use(router.allowedMethods())
 
 app.use(ctx => {
   ctx.status = 404
-  ctx.body = {
-    msg: 'not found'
-  }
+  ctx.body = { msg: 'not found' }
 })
 
 app.listen(8080, () => {
