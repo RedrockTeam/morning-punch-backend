@@ -2,8 +2,8 @@ import * as mysql from 'mysql'
 import { promisify } from 'util'
 
 import { mysqlConfig } from '../config'
-// 曲线救国。。。
-// 先将参数的database设置为空 然后连接上再想法子进数据库。。。
+
+// 先将参数的database设置为空 然后连接上再想法子进数据库
 let realConf: { [key: string]: any } = { ...mysqlConfig }
 let baseName = realConf.database
 realConf.database = void 0
