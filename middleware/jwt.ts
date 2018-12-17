@@ -1,9 +1,11 @@
 import { Middleware } from 'koa'
 import * as koajwt from 'koa-jwt'
 
+import { tokenSecret } from '../config'
+
 const jwt: Middleware = async (ctx, next) => {
   try {
-    await koajwt({ secret: 'my_token' }).unless({ path: [/\/login/] })(ctx, next)
+    await koajwt({ secret: tokenSecret }).unless({ path: [/\/login/] })(ctx, next)
   } catch (err) {
     if (err.status === 401) {
       ctx.status = 401

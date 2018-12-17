@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken')
 const router = new KoaRouter()
 import { getOne } from '../lib/mysql'
 import { RouterFormat } from './index'
+import { tokenSecret } from '../config'
 
 router.post('/', async ctx => {
   console.log(ctx.request.body)
@@ -15,7 +16,7 @@ router.post('/', async ctx => {
   } else {
     ctx.body.isNewUser = true
   }
-  ctx.body.jwt = jwt.sign({ name: openid }, 'my_token', { expiresIn: '2h' })
+  ctx.body.jwt = jwt.sign({ name: openid }, tokenSecret, { expiresIn: '2h' })
 })
 
 const routes: RouterFormat = {
