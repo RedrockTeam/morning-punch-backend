@@ -15,25 +15,30 @@ connection.connect(err => {
 })
 
 // 处理没有初始化数据库的问题
-if (true) {
-  ;(async () => {
-    await sqlQuery(`CREATE DATABASE IF NOT EXISTS ${baseName}`)
-      .then(async () => {
-        await sqlQuery(`USE ${baseName}`)
-      })
-      .then(async () => {
-        // 初始化列表
-        await sqlQuery(
-          `CREATE TABLE IF NOT EXISTS user_set (
+;(async () => {
+  await sqlQuery(`CREATE DATABASE IF NOT EXISTS ${baseName}`)
+    .then(async () => {
+      await sqlQuery(`USE ${baseName}`)
+    })
+    .then(async () => {
+      // 初始化列表
+      await sqlQuery(
+        `CREATE TABLE IF NOT EXISTS user_set (
           openid varchar(255) NOT NULL,
           punch_time int NOT NULL,
           score int NOT NULL,
           PRIMARY KEY (openid)
         ) COMMENT='';`
-        )
-      })
-  })()
-}
+      )
+      await sqlQuery(
+        `CREATE TABLE punch_set (
+          openid varchar(255) NOT NULL,
+          timestamp datetime NOT NULL,
+          iswining int
+        ) COMMENT='';`
+      )
+    })
+})()
 
 export const setOne = async (user: {
   openid: string
@@ -56,4 +61,14 @@ export const getOne = async (openid: string): Promise<{ [key: string]: any } | B
   if (queryRes.length === 1) return queryRes[0]
 
   return false
+}
+
+export const punchOne = async (openid: string): Promise<Boolean> => {
+  let prevScore = (await sqlQuery(`SELECT score FROM user_set WHERE openid='${openid}';`))[0].score
+  console.log(
+    await sqlQuery(`insert into punch_set 
+      ( openid, timestamp ) values ( '${openid}', '${Date.now()}')`)
+  )
+  await sqlQuery(`update user_set set score='${prevScore + 10}' where openid='${openid}'`)
+  return true
 }

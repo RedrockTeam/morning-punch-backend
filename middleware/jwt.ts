@@ -1,7 +1,7 @@
 import { Middleware } from 'koa'
 import * as koajwt from 'koa-jwt'
 
-const preset: Middleware = async (ctx, next) => {
+const jwt: Middleware = async (ctx, next) => {
   try {
     await koajwt({ secret: 'my_token' }).unless({ path: [/\/login/] })(ctx, next)
   } catch (err) {
@@ -15,4 +15,4 @@ const preset: Middleware = async (ctx, next) => {
   }
 }
 
-export default () => preset
+export default () => jwt
