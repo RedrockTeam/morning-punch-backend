@@ -7,13 +7,13 @@ import { RouterFormat } from './index'
 router.get('/', async ctx => {
   const { openid } = <{ [key: string]: any }>ctx.request.body
   if (!openid) return
-  let userData = <{ [key: string]: any }>await getOne(openid)
-  if (!userData) {
+  let userData = await getOne(openid)
+  if (!userData.openid) {
     ctx.body.status = 0
     ctx.body.errmsg = '该openid尚未登记时间'
   } else {
     const { openid, punch_time } = userData
-    let prevInfo = <{ [key: string]: any }>await getOne(openid)
+    let prevInfo = await getOne(openid)
     // 处理非法参数
     if (prevInfo.punch_time !== punch_time) {
       ctx.body.status = 0

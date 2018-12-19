@@ -9,7 +9,7 @@ import { tokenSecret } from '../config'
 router.post('/', async ctx => {
   console.log(ctx.request.body)
   const { openid } = <{ [key: string]: any }>ctx.request.body
-  let userData = <{ [key: string]: any }>await getOne(openid)
+  let userData = await getOne(openid)
   if (userData.openid) {
     ctx.body.info = userData
     ctx.body.isNewUser = false

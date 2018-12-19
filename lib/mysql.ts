@@ -55,12 +55,12 @@ export const setOne = async (user: {
   }
 }
 
-export const getOne = async (openid: string): Promise<{ [key: string]: any } | Boolean> => {
+export const getOne = async (openid: string): Promise<{ [key: string]: any }> => {
   let queryRes = await sqlQuery(`SELECT * FROM user_set WHERE openid='${openid}';`)
 
   if (queryRes.length === 1) return queryRes[0]
-
-  return false
+  // 处理有多个记录的情况
+  return {}
 }
 
 export const punchOne = async (openid: string): Promise<Boolean> => {
