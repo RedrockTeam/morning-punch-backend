@@ -13,7 +13,6 @@ router.post('/', async ctx => {
   } else {
     await setOne({ openid, punch_time, score: defaultScore[punch_time] })
     ctx.body.status = 1
-    console.log('1412')
     ctx.body.info = await getOne(openid)
   }
 })

@@ -7,7 +7,6 @@ import { RouterFormat } from './index'
 import { tokenSecret } from '../config'
 
 router.post('/', async ctx => {
-  console.log(ctx.request.body)
   const { openid } = <{ [key: string]: any }>ctx.request.body
   let userData = await getOne(openid)
   if (userData.openid) {
