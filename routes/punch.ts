@@ -4,7 +4,7 @@ const router = new KoaRouter()
 import { getOne, punchOne } from '../lib/mysql'
 import { RouterFormat } from './index'
 
-router.get('/', async ctx => {
+router.post('/', async ctx => {
   const { openid } = <{ [key: string]: any }>ctx.request.body
   if (!openid) return
   let userData = await getOne(openid)
