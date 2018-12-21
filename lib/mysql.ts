@@ -33,7 +33,7 @@ connection.connect(err => {
       await sqlQuery(
         `CREATE TABLE IF NOT EXISTS punch_set (
           openid varchar(255) NOT NULL,
-          timestamp datetime NOT NULL,
+          timestamp varchar(255) NOT NULL,
           iswining int
         ) COMMENT='';`
       )
