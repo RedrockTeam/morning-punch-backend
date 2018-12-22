@@ -63,12 +63,19 @@ export const getOne = async (openid: string): Promise<{ [key: string]: any }> =>
   return {}
 }
 
-export const punchOne = async (openid: string): Promise<Boolean> => {
+export const punchOne = async (openid: string): Promise<{ totalTime: number; conTime: number }> => {
   let prevScore = (await sqlQuery(`SELECT score FROM user_set WHERE openid='${openid}';`))[0].score
   console.log(
     await sqlQuery(`insert into punch_set 
       ( openid, timestamp ) values ( '${openid}', '${Date.now()}')`)
   )
   await sqlQuery(`update user_set set score='${prevScore + 10}' where openid='${openid}'`)
-  return true
+  return {
+    totalTime: await sqlQuery(
+      `update user_set set score='${prevScore + 10}' where openid='${openid}'`
+    ),
+    conTime: await sqlQuery(
+      `update user_set set score='${prevScore + 10}' where openid='${openid}'`
+    )
+  }
 }

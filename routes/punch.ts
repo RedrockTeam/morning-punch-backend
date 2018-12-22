@@ -20,9 +20,9 @@ router.post('/', async ctx => {
       ctx.body.errmsg = `传入的签到时间与之前设定的签到时间不符合`
       return
     }
-    punchOne(openid)
     ctx.body.status = 1
     ctx.body.time = Date.now()
+    ctx.body.info = punchOne(openid)
   }
 })
 
