@@ -1,8 +1,9 @@
 import * as mysql from 'mysql'
 import { promisify } from 'util'
-
+import * as dayjs from 'dayjs'
 import { mysqlConfig } from '../config'
 
+console.log(dayjs('2018-12-23').diff(dayjs(), 'day'))
 // 先将参数的database设置为空 然后连接上再想法子进数据库
 let realConf: { [key: string]: any } = { ...mysqlConfig }
 let baseName = realConf.database
@@ -64,18 +65,17 @@ export const getOne = async (openid: string): Promise<{ [key: string]: any }> =>
 }
 
 export const punchOne = async (openid: string): Promise<{ totalTime: number; conTime: number }> => {
-  let prevScore = (await sqlQuery(`SELECT score FROM user_set WHERE openid='${openid}';`))[0].score
+  let { score, last_date } = (await sqlQuery(
+    `SELECT score, last_date FROM user_set WHERE openid='${openid}';`
+  ))[0]
+
   console.log(
     await sqlQuery(`insert into punch_set 
       ( openid, timestamp ) values ( '${openid}', '${Date.now()}')`)
   )
-  await sqlQuery(`update user_set set score='${prevScore + 10}' where openid='${openid}'`)
+  await sqlQuery(`update user_set set score='${score + 1}' where openid='${openid}'`)
   return {
-    totalTime: await sqlQuery(
-      `update user_set set score='${prevScore + 10}' where openid='${openid}'`
-    ),
-    conTime: await sqlQuery(
-      `update user_set set score='${prevScore + 10}' where openid='${openid}'`
-    )
+    totalTime: Number(score + 1),
+    conTime: Number(new Date(last_date))
   }
 }

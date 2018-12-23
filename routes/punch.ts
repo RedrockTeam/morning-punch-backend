@@ -22,7 +22,7 @@ router.post('/', async ctx => {
     }
     ctx.body.status = 1
     ctx.body.time = Date.now()
-    ctx.body.info = punchOne(openid)
+    ctx.body.info = await punchOne(openid)
   }
 })
 
