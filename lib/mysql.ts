@@ -3,7 +3,7 @@ import { promisify } from 'util'
 import * as dayjs from 'dayjs'
 import { mysqlConfig } from '../config'
 
-console.log(dayjs('2018-12-23').diff(dayjs(), 'day'))
+console.log(dayjs().diff(dayjs('2018-12-24'), 'day'))
 // 先将参数的database设置为空 然后连接上再想法子进数据库
 let realConf: { [key: string]: any } = { ...mysqlConfig }
 let baseName = realConf.database
@@ -28,6 +28,7 @@ connection.connect(err => {
           openid varchar(255) NOT NULL,
           punch_time int NOT NULL,
           score int NOT NULL,
+          last_date varchar(255) NOT NULL,
           PRIMARY KEY (openid)
         ) COMMENT='';`
       )
@@ -47,16 +48,17 @@ export const setOne = async (user: {
   score?: number
 }): Promise<Boolean> => {
   try {
-    const { openid, punch_time, score = 45 } = user
+    const { openid, punch_time, score = 1 } = user
     await sqlQuery(`insert into user_set 
-      ( openid, punch_time, score) values ( '${openid}', '${punch_time}', '${score}')`)
+      ( openid, punch_time, score, last_date ) values ( '${openid}', '${punch_time}', '${score}', '${Date.now()}')`)
     return true
   } catch (err) {
+    console.log(err)
     return false
   }
 }
 
-export const getOne = async (openid: string): Promise<{ [key: string]: any }> => {
+export const getOne = async (openid: string): Promise<{ openid?: string; [key: string]: any }> => {
   let queryRes = await sqlQuery(`SELECT * FROM user_set WHERE openid='${openid}';`)
 
   if (queryRes.length === 1) return queryRes[0]
@@ -68,14 +70,24 @@ export const punchOne = async (openid: string): Promise<{ totalTime: number; con
   let { score, last_date } = (await sqlQuery(
     `SELECT score, last_date FROM user_set WHERE openid='${openid}';`
   ))[0]
-
-  console.log(
-    await sqlQuery(`insert into punch_set 
+  let conTime = 1,
+    diffTime = dayjs().diff(dayjs(Number(last_date)), 'day')
+  // 看是否是连续签到
+  if (diffTime > 1) {
+    await sqlQuery(
+      `update user_set set score='${score + 1}', last_date='${Date.now()}' where openid='${openid}'`
+    )
+  } else {
+    conTime += diffTime
+  }
+  // 添加子表
+  await sqlQuery(`insert into punch_set 
       ( openid, timestamp ) values ( '${openid}', '${Date.now()}')`)
-  )
+  // 更新分数
   await sqlQuery(`update user_set set score='${score + 1}' where openid='${openid}'`)
+
   return {
     totalTime: Number(score + 1),
-    conTime: Number(new Date(last_date))
+    conTime
   }
 }

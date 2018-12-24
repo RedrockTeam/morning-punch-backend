@@ -10,7 +10,7 @@ router.post('/', async ctx => {
 })
 
 const routes: RouterFormat = {
-  path: '/',
+  path: '/templete',
   router
 }
 

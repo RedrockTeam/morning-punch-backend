@@ -8,5 +8,3 @@ export const mysqlConfig: ConnectionConfig = {
   password: 'coderming',
   database: 'short_url'
 }
-
-export const defaultScore = [55, 50, 45]
