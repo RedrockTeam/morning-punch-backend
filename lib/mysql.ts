@@ -36,7 +36,8 @@ connection.connect(err => {
         `CREATE TABLE IF NOT EXISTS punch_set (
           openid varchar(255) NOT NULL,
           timestamp varchar(255) NOT NULL,
-          iswining int
+          iswining int,
+          PRIMARY KEY (timestamp)
         ) COMMENT='';`
       )
     })
