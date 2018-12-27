@@ -8,7 +8,10 @@ const preset: Middleware = async (ctx, next) => {
 
   // 判断之前是否有修改过参数
   if (Object.keys(ctx.body).length) ctx.status = 200
-  else {
+  else if (ctx.method !== 'POST') {
+    ctx.status = 404
+    ctx.body = { status: 0, errmsg: '本API只支持POST访问' }
+  } else {
     ctx.status = 404
     ctx.body = { status: 0, errmsg: '无数据' }
   }
