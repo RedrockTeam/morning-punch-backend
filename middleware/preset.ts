@@ -1,7 +1,7 @@
 import { Middleware } from 'koa'
 
 const HOST = 'https://nalgd.top/'
-const REDIRECT_URI = `${HOST}info`
+const REDIRECT_URI = `${HOST}api/info`
 const FRONT_END = 'https://nalgd.top/zqqd/'
 
 const preset: Middleware = async (ctx, next) => {
@@ -19,8 +19,8 @@ const preset: Middleware = async (ctx, next) => {
   else if(ctx.request.URL.pathname.replace('/', '') === 'info') {
     const openid = ctx.query['openid']
     ctx.status = 301
+    ctx.cookies.set('openid', openid, {httpOnly: false})
     ctx.set({
-        'Set-Cookie': openid,
         'Location': `${FRONT_END}`
     })
   }
